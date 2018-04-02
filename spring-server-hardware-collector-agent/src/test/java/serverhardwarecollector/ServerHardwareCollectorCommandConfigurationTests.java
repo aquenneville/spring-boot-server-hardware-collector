@@ -1,4 +1,4 @@
-package configa.configa;
+package serverhardwarecollector;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -2,6 +2,7 @@ package serverhardwarecollector;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,12 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import serverhardwarecollector.configuration.ServerHardwareCommandConfiguration;
 import serverhardwarecollector.model.ServerHardwareData;
 import serverhardwarecollector.model.ServerHardwareData.Disk;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 
@@ -32,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RequestMapping("/api")
 public class RestServerHardwareCollectorAgentController {
 
-	// --server.port=9090 --server.hardware.collector.ip=1.1.1.1
+	// --server.hardware.collector.port=9390 --server.hardware.collector.ip=1.1.1.1
 	@Value("${server.hardware.collector.ip}")
 	private String serverIp;
 
@@ -42,7 +44,7 @@ public class RestServerHardwareCollectorAgentController {
 	@Autowired
 	private ServerHardwareCommandConfiguration commandConfig;
 	
-	@RequestMapping("/test-collector") 
+	@RequestMapping("/test-agent") 
 	public ServerHardwareData test() {
 		return collectConfigurationData(commandConfig);
 	}
@@ -55,7 +57,7 @@ public class RestServerHardwareCollectorAgentController {
 		return sendConfigurationData(data);
 	}
 	
-	public static ServerHardwareData collectConfigurationData(ServerHardwareCommandConfiguration commandConfig) {
+	public ServerHardwareData collectConfigurationData(ServerHardwareCommandConfiguration commandConfig) {
 		ServerHardwareData data = new ServerHardwareData();
 		String[] diskModels = null;		
 		String[] disksUsage = null;
@@ -93,6 +95,7 @@ public class RestServerHardwareCollectorAgentController {
 			List<Disk> disks = new ArrayList<Disk>();
 			disks.add(disk);
 			data.setDisks(disks);
+			data.setCollectionDate(LocalDate.now());
 			
 		} else if (SystemUtils.IS_OS_MAC_OSX) {			
 			data.setHostname("unknown");
@@ -108,9 +111,10 @@ public class RestServerHardwareCollectorAgentController {
 			List<Disk> disks = new ArrayList<Disk>();
 			disks.add(disk);
 			data.setDisks(disks);
-
-		} else	{
+			data.setCollectionDate(LocalDate.now());
 			
+		} else	{
+			data.setCollectionDate(LocalDate.now());
 			data.setCpu("cpu 101");
 			data.setHostname("localhost");
 						
@@ -141,7 +145,7 @@ public class RestServerHardwareCollectorAgentController {
 		return data;
 	}
 	
-	public static String collectExternalProcessData(String command) {
+	public String collectExternalProcessData(String command) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		String line = command;
 		CommandLine cmdLine = CommandLine.parse(line);
@@ -163,7 +167,7 @@ public class RestServerHardwareCollectorAgentController {
 		return(outputStream.toString());
 	}
 	
-	public static String sendConfigurationData(ServerHardwareData configData) {
+	public String sendConfigurationData(ServerHardwareData configData) {
 		//ClientHttpRequestFactory requestFactory = getClientHttpRequestFactory();
 		RestTemplate restTemplate = new RestTemplate();
 		
@@ -179,8 +183,8 @@ public class RestServerHardwareCollectorAgentController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		String response = restTemplate.postForObject("http://"+serverIp+":"+serverPort+"/add-config", httpEntity, String.class);
+		System.out.println(serverIp+":"+serverPort);
+		String response = restTemplate.postForObject("http://"+serverIp+":"+serverPort+"/api/add-config", httpEntity, String.class);
 		System.out.println(response);
 		// assertThat(foo, notNullValue());
 		//assertThat(foo.getName(), is("bar"));

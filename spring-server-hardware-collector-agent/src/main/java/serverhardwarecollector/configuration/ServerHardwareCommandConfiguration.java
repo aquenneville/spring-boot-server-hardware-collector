@@ -1,5 +1,7 @@
 package serverhardwarecollector.configuration;
 
+import java.time.LocalDateTime;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,7 @@ public class ServerHardwareCommandConfiguration {
 	private String ip = "";
 	private String macAddress = "";
 	private String os = "";
+		
 	public String getCpu() {
 		return cpu;
 	}
@@ -77,5 +80,7 @@ public class ServerHardwareCommandConfiguration {
 	public void setOs(String os) {
 		this.os = os;
 	}
+	
+	
 	
 }
