@@ -1,4 +1,4 @@
-package configa.configa.second;
+package serverhardwarecollector;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,26 +22,26 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import configa.configa.model.ConfigurationData;
-import configa.configa.model.ConfigurationData.Disk;
-import configa.configa.model.ConfigurationResponse;
+import serverhardwarecollector.model.ServerHardwareData;
+import serverhardwarecollector.model.ServerHardwareData.Disk;
+import serverhardwarecollector.model.ServerHardwareResponse;
 
 @RestController
 @RequestMapping("/api")
 public class RestServerHardwareCollectorController {
 
-	Set<ConfigurationData> networkConfig = new HashSet<ConfigurationData>();
+	Set<ServerHardwareData> networkConfig = new HashSet<ServerHardwareData>();
 	ReentrantLock lock = new ReentrantLock();
 	
-	private static final Logger logger = LoggerFactory.getLogger(RestConfigController.class);
+	private static final Logger logger = LoggerFactory.getLogger(RestServerHardwareCollectorController.class);
 	
 	@RequestMapping("/add-config")
-    public ConfigurationResponse addConfig(HttpServletResponse httpResponse, @RequestBody @Valid ConfigurationData request) {
+    public ServerHardwareResponse addConfig(HttpServletResponse httpResponse, @RequestBody @Valid ServerHardwareData request) {
 		//HttpServletRequest httpRequest, Authentication authentication, @RequestBody @Valid CreateApplicationRequest request
 		//@RequestParam(value="name", defaultValue="World") String name
 		lock.lock();
 		ObjectMapper mapper = new ObjectMapper();
-		JavaType type = mapper.getTypeFactory().constructCollectionType(Set.class, ConfigurationData.class);
+		JavaType type = mapper.getTypeFactory().constructCollectionType(Set.class, ServerHardwareData.class);
 		try {
 			networkConfig = mapper.readValue(new File(Paths.get("hardware-config.json").toString()), type);
 		} catch (IOException e) {
@@ -66,16 +66,16 @@ public class RestServerHardwareCollectorController {
 		} finally {
 			lock.unlock();
 		}
-		ConfigurationResponse response = new ConfigurationResponse();
+		ServerHardwareResponse response = new ServerHardwareResponse();
 		response.setResponseCode(httpResponse.getStatus());
 	    return response; 
     }
 	
 	@RequestMapping("/get-config")
-	public Set<ConfigurationData> getConfig() {
-		Set<ConfigurationData> networkConfig = null;
+	public Set<ServerHardwareData> getConfig() {
+		Set<ServerHardwareData> networkConfig = null;
 		ObjectMapper mapper = new ObjectMapper();
-		JavaType type = mapper.getTypeFactory().constructCollectionType(Set.class, ConfigurationData.class);
+		JavaType type = mapper.getTypeFactory().constructCollectionType(Set.class, ServerHardwareData.class);
 		try {
 			networkConfig = mapper.readValue(new File(Paths.get("hardware-config.json").toString()), type);
 		} catch (IOException e) {
@@ -87,8 +87,8 @@ public class RestServerHardwareCollectorController {
 	}
 	
 	@RequestMapping("/test") 
-	public ConfigurationData test() {
-		ConfigurationData data = new ConfigurationData();
+	public ServerHardwareData test() {
+		ServerHardwareData data = new ServerHardwareData();
 		// cat /proc/cpuinfo | grep "model name" | head -n1
 		data.setCpu("Intel "); 
 		// ifconfig | grep -oP '([0-9a-f]{2}[:]){5}([0-9a-f]){2}'
@@ -105,13 +105,28 @@ public class RestServerHardwareCollectorController {
 		data.setMotherboard("");
 		
 		List<Disk> disks = new ArrayList<Disk>();
-		Disk disk = new ConfigurationData.Disk();
+		Disk disk = new ServerHardwareData.Disk();
 		disk.setModel("");
 		disk.setSize("20G");
 		disk.setUsage("75%");
 		disk.setMaster(true);
 		disks.add(disk);
 		data.setDisks(disks);
+		
+		System.out.println("received request: " + data.getHostname() + " cpu:" + data.getCpu());
+		logger.debug("--Application Started--");
+		
+		networkConfig.add(data);
+		ObjectMapper mapper = new ObjectMapper();
+		// save in json to disk			
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		try {
+			mapper.writeValue(new File(Paths.get("hardware-config.json").toString()), networkConfig);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return data;
 	}
 }
