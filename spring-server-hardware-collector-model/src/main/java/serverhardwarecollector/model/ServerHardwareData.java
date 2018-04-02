@@ -1,5 +1,7 @@
 package serverhardwarecollector.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,8 @@ public class ServerHardwareData {
 	private String osName;	
 	private String macAddress;
 	private static List<Disk> disks;
-		
+	private LocalDate collectionDate;
+			
 	public ServerHardwareData() {
 		disks = new ArrayList<Disk>();
 	}
@@ -89,7 +92,15 @@ public class ServerHardwareData {
 	public void setMacAddress(String macAddress) {
 		this.macAddress = macAddress;
 	}
-	
+
+	public LocalDate getCollectionDate() {
+		return collectionDate;
+	}
+
+	public void setCollectionDate(LocalDate collectionDate) {
+		this.collectionDate = collectionDate;
+	}
+
 	public static class Disk {
 		
 		public Disk() {		
