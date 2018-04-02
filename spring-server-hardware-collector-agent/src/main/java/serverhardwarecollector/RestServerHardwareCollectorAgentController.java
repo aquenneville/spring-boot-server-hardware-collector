@@ -23,6 +23,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import serverhardwarecollector.configuration.ServerHardwareCommandConfiguration;
 import serverhardwarecollector.model.ServerHardwareData;
@@ -175,7 +177,9 @@ public class RestServerHardwareCollectorAgentController {
 		//headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);		
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper()
+		.registerModule(new Jdk8Module())
+		   .registerModule(new JavaTimeModule());
 		HttpEntity<String> httpEntity = null;
 		try {
 			httpEntity = new HttpEntity <String> (mapper.writeValueAsString(configData), headers);

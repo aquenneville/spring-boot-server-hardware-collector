@@ -1,0 +1,31 @@
+[ {
+  "cpu" : "Intel ",
+  "motherboard" : "",
+  "hostname" : "hostname",
+  "memory" : "7.8 G",
+  "ip" : "172.32.12.243",
+  "osName" : "Ubuntu 16.04.3 LTS",
+  "macAddress" : "0a:e2:56:e4:ec:a8",
+  "collectionDate" : [ 2018, 4, 2 ],
+  "disks" : [ {
+    "size" : "20G",
+    "model" : "",
+    "usage" : "75%",
+    "master" : true
+  } ]
+}, {
+  "cpu" : "unknown",
+  "motherboard" : "unknown",
+  "hostname" : "unknown",
+  "memory" : "unknown",
+  "ip" : "",
+  "osName" : "",
+  "macAddress" : "unknown",
+  "collectionDate" : [ 2018, 4, 2 ],
+  "disks" : [ {
+    "size" : "20G",
+    "model" : "",
+    "usage" : "75%",
+    "master" : true
+  } ]
+} ]
