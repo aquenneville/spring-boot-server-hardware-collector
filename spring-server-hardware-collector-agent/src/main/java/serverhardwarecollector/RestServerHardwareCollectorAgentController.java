@@ -52,7 +52,7 @@ public class RestServerHardwareCollectorAgentController {
 	}
 	
 	@RequestMapping("/send-config")
-	@Scheduled(cron = "0 0 23 * * ?")
+	@Scheduled(cron = "0 0 16 * * ?")
 	public String sendConfig() {
 		
 		ServerHardwareData data = collectConfigurationData(commandConfig);
@@ -66,7 +66,7 @@ public class RestServerHardwareCollectorAgentController {
 
 		if (SystemUtils.IS_OS_WINDOWS) {
 			data.setOsName("Windows");
-			String[] networkConfigurationTokens = collectExternalProcessData("ipconfig /all").split("\n");
+			String[] networkConfigurationTokens = Process.collectExternalProcessData("ipconfig /all").split("\n");
 			for (String token: networkConfigurationTokens) {
 				if (token.contains("Host Name")) {
 					if ("".equals(data.getHostname())) {
@@ -117,26 +117,23 @@ public class RestServerHardwareCollectorAgentController {
 			
 		} else	{
 			data.setCollectionDate(LocalDate.now());
-			data.setCpu("cpu 101");
-			data.setHostname("localhost");
-						
-			data.setCpu(collectExternalProcessData(commandConfig.getCpu()));
+			data.setCpu(Process.collectExternalProcessData(commandConfig.getCpu()));
 		
-			data.setHostname(collectExternalProcessData(commandConfig.getHostname()));
-			data.setMemory(collectExternalProcessData(commandConfig.getMemory()));
-			data.setIp(collectExternalProcessData(commandConfig.getIp()));
-			data.setOsName(collectExternalProcessData(commandConfig.getOs()));
-			data.setMotherboard(collectExternalProcessData(commandConfig.getMotherboard()));
+			data.setHostname(Process.collectExternalProcessData(commandConfig.getHostname()));
+			data.setMemory(Process.collectExternalProcessData(commandConfig.getMemory()));
+			data.setIp(Process.collectExternalProcessData(commandConfig.getIp()));
+			data.setOsName(Process.collectExternalProcessData(commandConfig.getOs()));
+			data.setMotherboard(Process.collectExternalProcessData(commandConfig.getMotherboard()));
 		
 			List<Disk> disks = new ArrayList<Disk>();
-			diskModels = collectExternalProcessData(commandConfig.getDiskSerial()).split("");
-			disksUsage = collectExternalProcessData(commandConfig.getDiskUsage()).split("");
+			diskModels = Process.collectExternalProcessData(commandConfig.getDiskSerial()).split("");
+			disksUsage = Process.collectExternalProcessData(commandConfig.getDiskUsage()).split("");
 			Disk disk = null;
 			int index = 0;
 			for (String model: diskModels) {
 				disk = new ServerHardwareData.Disk();
 				disk.setModel(model);
-				disk.setSize(collectExternalProcessData(commandConfig.getDiskSize()));
+				disk.setSize(Process.collectExternalProcessData(commandConfig.getDiskSize()));
 				disk.setUsage(disksUsage[index]);
 				index ++;
 				disks.add(disk);
@@ -145,28 +142,6 @@ public class RestServerHardwareCollectorAgentController {
 			
 		}
 		return data;
-	}
-	
-	public String collectExternalProcessData(String command) {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		String line = command;
-		CommandLine cmdLine = CommandLine.parse(line);
-		DefaultExecutor executor = new DefaultExecutor();
-		PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
-		executor.setStreamHandler(streamHandler);
-		//int exitValue = 
-		try {
-			executor.execute(cmdLine);
-		} catch (ExecuteException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			System.out.println("Something went wrong EXE");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			System.out.println("Something went wrong IO");
-		} 		
-		return(outputStream.toString());
 	}
 	
 	public String sendConfigurationData(ServerHardwareData configData) {
@@ -178,8 +153,8 @@ public class RestServerHardwareCollectorAgentController {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
 		ObjectMapper mapper = new ObjectMapper()
-		.registerModule(new Jdk8Module())
-		   .registerModule(new JavaTimeModule());
+			.registerModule(new Jdk8Module())
+			.registerModule(new JavaTimeModule());
 		HttpEntity<String> httpEntity = null;
 		try {
 			httpEntity = new HttpEntity <String> (mapper.writeValueAsString(configData), headers);

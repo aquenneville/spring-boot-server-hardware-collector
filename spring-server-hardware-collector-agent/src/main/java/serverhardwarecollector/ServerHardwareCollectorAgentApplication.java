@@ -15,13 +15,6 @@ public class ServerHardwareCollectorAgentApplication {
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ServerHardwareCollectorAgentApplication.class, args);
-		
-//		ConfigurationData data = collectConfigurationData(commandConfig);
-//		
-//		sendConfigurationData(data);
-//		sendConfigurationData(data);
-//		sendConfigurationData(data);
-		
 	}
 
 }
