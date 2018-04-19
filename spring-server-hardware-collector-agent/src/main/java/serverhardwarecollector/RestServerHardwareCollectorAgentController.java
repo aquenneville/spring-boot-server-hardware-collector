@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteException;
+import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.SystemUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,9 +119,7 @@ public class RestServerHardwareCollectorAgentController {
 			
 		} else	{
 			data.setCollectionDate(LocalDate.now());
-			data.setCpu("cpu 101");
-			data.setHostname("localhost");
-						
+					
 			data.setCpu(collectExternalProcessData(commandConfig.getCpu()));
 		
 			data.setHostname(collectExternalProcessData(commandConfig.getHostname()));
@@ -129,8 +129,8 @@ public class RestServerHardwareCollectorAgentController {
 			data.setMotherboard(collectExternalProcessData(commandConfig.getMotherboard()));
 		
 			List<Disk> disks = new ArrayList<Disk>();
-			diskModels = collectExternalProcessData(commandConfig.getDiskSerial()).split("");
-			disksUsage = collectExternalProcessData(commandConfig.getDiskUsage()).split("");
+			diskModels = collectExternalProcessData(commandConfig.getDiskSerial()).split(" ");
+			disksUsage = collectExternalProcessData(commandConfig.getDiskUsage()).split(" ");
 			Disk disk = null;
 			int index = 0;
 			for (String model: diskModels) {
@@ -150,23 +150,32 @@ public class RestServerHardwareCollectorAgentController {
 	public String collectExternalProcessData(String command) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		String line = command;
-		CommandLine cmdLine = CommandLine.parse(line);
+		System.out.println("/bin/bash -c '"+command+"'");
+		CommandLine cmdLine = new CommandLine("/bin/bash"); 
+		String[] cmd = {"-c", line }; 
+		cmdLine.addArguments(cmd, false);
+		
+		DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+		ExecuteWatchdog watchdog = new ExecuteWatchdog(60000);
 		DefaultExecutor executor = new DefaultExecutor();
+		executor.setExitValue(1);
+		executor.setWatchdog(watchdog);
 		PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream);
 		executor.setStreamHandler(streamHandler);
-		//int exitValue = 
+		
 		try {
-			executor.execute(cmdLine);
+			executor.execute(cmdLine, resultHandler);
+			
 		} catch (ExecuteException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			System.out.println("Something went wrong EXE");
+			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			System.out.println("Something went wrong IO");
-		} 		
-		return(outputStream.toString());
+			e.printStackTrace();
+		} 
+		return new String(outputStream.toString());
 	}
 	
 	public String sendConfigurationData(ServerHardwareData configData) {
