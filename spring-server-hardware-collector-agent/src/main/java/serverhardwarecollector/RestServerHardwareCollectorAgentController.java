@@ -121,8 +121,7 @@ public class RestServerHardwareCollectorAgentController {
 			data.setCollectionDate(LocalDate.now());
 					
 			data.setCpu(collectExternalProcessData(commandConfig.getCpu()));
-			data.setCpu(Process.collectExternalProcessData(commandConfig.getCpu()));
-		
+			
 			data.setHostname(collectExternalProcessData(commandConfig.getHostname()));
 			data.setMemory(collectExternalProcessData(commandConfig.getMemory()));
 			data.setIp(collectExternalProcessData(commandConfig.getIp()));
@@ -166,6 +165,7 @@ public class RestServerHardwareCollectorAgentController {
 		
 		try {
 			executor.execute(cmdLine, resultHandler);
+			Thread.sleep(1000);
 			
 		} catch (ExecuteException e) {
 			// TODO Auto-generated catch block
@@ -175,7 +175,9 @@ public class RestServerHardwareCollectorAgentController {
 			// TODO Auto-generated catch block
 			System.out.println("Something went wrong IO");
 			e.printStackTrace();
-		} 
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return new String(outputStream.toString());
 	}
 	
