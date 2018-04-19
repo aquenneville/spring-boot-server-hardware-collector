@@ -121,6 +121,7 @@ public class RestServerHardwareCollectorAgentController {
 			data.setCollectionDate(LocalDate.now());
 					
 			data.setCpu(collectExternalProcessData(commandConfig.getCpu()));
+			data.setCpu(Process.collectExternalProcessData(commandConfig.getCpu()));
 		
 			data.setHostname(collectExternalProcessData(commandConfig.getHostname()));
 			data.setMemory(collectExternalProcessData(commandConfig.getMemory()));
@@ -187,8 +188,8 @@ public class RestServerHardwareCollectorAgentController {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		
 		ObjectMapper mapper = new ObjectMapper()
-		.registerModule(new Jdk8Module())
-		   .registerModule(new JavaTimeModule());
+			.registerModule(new Jdk8Module())
+		   	.registerModule(new JavaTimeModule());
 		HttpEntity<String> httpEntity = null;
 		try {
 			httpEntity = new HttpEntity <String> (mapper.writeValueAsString(configData), headers);
@@ -199,16 +200,9 @@ public class RestServerHardwareCollectorAgentController {
 		System.out.println(serverIp+":"+serverPort);
 		String response = restTemplate.postForObject("http://"+serverIp+":"+serverPort+"/api/add-config", httpEntity, String.class);
 		System.out.println(response);
-		// assertThat(foo, notNullValue());
-		//assertThat(foo.getName(), is("bar"));
+
 		return response;
 	}
 	
-	//https://docs.oracle.com/cd/E12058_01/doc/doc.1014/e12030/cron_expressions.htm
-//	@Scheduled(cron = "0 0 23 * * ?")
-//	public void collect() {
-//		ConfigurationData data = collectConfigurationData(commandConfig);
-//		
-//		sendConfigurationData(data);
-//	}
+
 }
