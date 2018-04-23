@@ -40,7 +40,11 @@ Tests
 
 To do 
 ----------------------------------
+- [ ] Commit the web-client
 - [ ] Deploy and run server in prod
 - [ ] Deploy and run agents on computers
 - [ ] Configure agent to start on boot
 - [ ] Add bash commands for Mac
+
+Changelog
+-----------------------------------
