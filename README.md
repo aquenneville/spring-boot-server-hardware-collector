@@ -1,6 +1,12 @@
 # spring-server-hardware-collector
 Collect the hardware details of machines on lan.
 
+Features
+----------------------------------
+- Decoupled hardware data collection from the storage with REST 
+- Spring boot all around
+- Parsing and collecting of the hardware details with Bash 
+
 Design
 ----------------------------------
 <img width="250" alt="1st page" src="sshc-diagram.png">
