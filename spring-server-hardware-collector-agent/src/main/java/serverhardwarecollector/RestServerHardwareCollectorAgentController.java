@@ -127,6 +127,7 @@ public class RestServerHardwareCollectorAgentController {
 			data.setIp(collectExternalProcessData(commandConfig.getIp()));
 			data.setOsName(collectExternalProcessData(commandConfig.getOs()));
 			data.setMotherboard(collectExternalProcessData(commandConfig.getMotherboard()));
+			data.setMacAddress(collectExternalProcessData(commandConfig.getMacAddress()));
 		
 			List<Disk> disks = new ArrayList<Disk>();
 			diskModels = collectExternalProcessData(commandConfig.getDiskSerial()).split(" ");
@@ -138,6 +139,9 @@ public class RestServerHardwareCollectorAgentController {
 				disk.setModel(model);
 				disk.setSize(collectExternalProcessData(commandConfig.getDiskSize()));
 				disk.setUsage(disksUsage[index]);
+				if (index == 0) {
+					disk.setMaster(true);
+				}
 				index ++;
 				disks.add(disk);
 			}
@@ -169,18 +173,19 @@ public class RestServerHardwareCollectorAgentController {
 			
 		} catch (ExecuteException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Something went wrong EXE");
+			System.out.println("Something went wrong EXE during the hardware data collection");
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Something went wrong IO");
+//			System.out.println("Something went wrong IO during the hardware data collection");
 			e.printStackTrace();
 		} catch (InterruptedException e) {
+			System.out.println("Hardware data collection interrupted");
 			e.printStackTrace();
 		}
-		return new String(outputStream.toString());
+		return new String(outputStream.toString().replaceAll("\\n", "").trim());
 	}
-	
+
 	public String sendConfigurationData(ServerHardwareData configData) {
 		//ClientHttpRequestFactory requestFactory = getClientHttpRequestFactory();
 		RestTemplate restTemplate = new RestTemplate();
