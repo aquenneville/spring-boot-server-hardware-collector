@@ -3,4 +3,4 @@ Collect the hardware details of my machines on my home network.
 
 Design
 ----------------------------------
-<img width="200" alt="1st page" src="sshc-diagram.png">
+<img width="250" alt="1st page" src="sshc-diagram.png">
