@@ -8,29 +8,23 @@ Design
 
 Requirements
 ----------------------------------
-Java v8
-
-Shell/git skills to run this app
-
-Compatible Linux 
+- Java v8
+- Shell/git skills to run this app
+- Compatible Linux 
 
 
 Installation
 ----------------------------------
-Server: tbd
-
-Agent: tbd
-
-Web-client: tbd
+- Server: tbd
+- Agent: tbd
+- Web-client: tbd
 
 
 Usage
 ----------------------------------
-Server: tbd http://...
-
-Agent: tbd http://
-
-Web-client: tbd http://
+- Server: tbd http://...
+- Agent: tbd http://
+- Web-client: tbd http://
 
 
 Tests
