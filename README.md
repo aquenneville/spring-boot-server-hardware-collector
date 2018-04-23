@@ -6,6 +6,7 @@ Features
 - Decoupled hardware data collection from the storage with REST 
 - Spring boot all around
 - Parsing and collecting of the hardware details with Bash 
+- Vue.js web-client
 
 Design
 ----------------------------------
