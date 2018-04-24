@@ -44,7 +44,7 @@ To do
 - [x] Commit the web-client
 - [ ] Deploy and run server in prod
 - [ ] Deploy and run agents on computers
-- [ ] Configure agent to start on boot
+- [ ] Configure agent to start on boot: crontab -e @reboot /path/to/script
 - [ ] Add bash commands for Mac
 
 Changelog
