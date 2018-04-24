@@ -3,7 +3,7 @@ Collect the hardware details of machines on lan.
 
 Features
 ----------------------------------
-- Decoupled hardware data collection from the data storage with REST 
+- Decoupled hardware data collection from the hardware data storage with REST 
 - Spring boot all around
 - Parsing and collecting of the hardware details with Bash 
 - Vue.js web-client
