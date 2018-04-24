@@ -15,7 +15,7 @@ Design
 
 Requirements
 ----------------------------------
-- Java v8
+- Java v8, Node.Js
 - Shell/git skills to run this app
 - Compatible Linux 
 
