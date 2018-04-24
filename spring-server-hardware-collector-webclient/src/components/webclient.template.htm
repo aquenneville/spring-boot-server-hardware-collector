@@ -1,0 +1,62 @@
+<header class="header-banner">
+  <div class="row">
+    <div class="cell">
+      <h1 class="c6694">{{ msg }}
+      </h1>
+      <h2 id="izcmut">REST service call results
+      </h2>
+      <div class="service">
+        <button v-on:click="callRestService()" id="izpf9t">CALL Spring Boot REST backend service</button>
+        <button v-on:click="initResponse()" id="i81yil">InitResponse</button>
+        <h4 id="iyq1kw">Backend response: {{ response }}
+        </h4>
+        <table class="container">
+          <thead>
+            <tr id="i0sg6i">
+              <th v-if="display">HostName
+              </th>
+              <th v-if="display">Os Name
+              </th>
+              <th v-if="display">IP
+              </th>
+              <th v-if="display">MacAddress
+              </th>
+              <th v-if="display">Cpu
+              </th>
+              <th v-if="display">Memory
+              </th>
+              <th v-if="display">Motherboard
+              </th>
+              <th v-if="display">Disks
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="config in response" id="iif31i">
+              <td id="idk70z"> {{config.hostname}}
+              </td>
+              <td id="inei2r"> {{config.osName}}
+              </td>
+              <td id="ioyjju"> {{config.ip}}
+              </td>
+              <td id="ipm7m6"> {{config.macAddress}}
+              </td>
+              <td id="icviby"> {{config.cpu}}
+              </td>
+              <td id="iqh5bj"> {{config.memory}}
+              </td>
+              <td id="izh654"> {{config.motherboard}}
+              </td>
+              <td v-for="disk in config.disks" id="i020ho"> master:{{disk.master}}
+                <br/>model:{{disk.model}}
+                <br/>size:{{disk.size}}
+                <br/>usage:{{disk.usage}}
+                <br/>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</header>
