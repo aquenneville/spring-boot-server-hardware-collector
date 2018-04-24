@@ -41,7 +41,7 @@ Tests
 
 To do 
 ----------------------------------
-- [ ] Commit the web-client
+- [x] Commit the web-client
 - [ ] Deploy and run server in prod
 - [ ] Deploy and run agents on computers
 - [ ] Configure agent to start on boot
