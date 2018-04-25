@@ -3,7 +3,7 @@ Collect the hardware details of machines on lan.
 
 Features
 ----------------------------------
-- Decoupled hardware data collection from the data storage with REST 
+- Decoupled hardware data collection from the hardware data storage with REST 
 - Spring boot all around
 - Parsing and collecting of the hardware details with Bash 
 - Vue.js web-client
@@ -15,7 +15,7 @@ Design
 
 Requirements
 ----------------------------------
-- Java v8
+- Java v8, Node.Js
 - Shell/git skills to run this app
 - Compatible Linux 
 
@@ -41,10 +41,10 @@ Tests
 
 To do 
 ----------------------------------
-- [ ] Commit the web-client
+- [x] Commit the web-client
 - [ ] Deploy and run server in prod
 - [ ] Deploy and run agents on computers
-- [ ] Configure agent to start on boot
+- [ ] Configure agent to start on boot: crontab -e @reboot /path/to/script
 - [ ] Add bash commands for Mac
 
 Changelog
