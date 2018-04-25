@@ -31,7 +31,12 @@ Usage
 ----------------------------------
 - Server: tbd http://...
 - Agent: tbd http://
-- Web-client: tbd http://
+- Web-client: 
+npm install
+
+npm run dev 
+
+open browser at: http://localhost:8088/#/service
 
 
 Tests
