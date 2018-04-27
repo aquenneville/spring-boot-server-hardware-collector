@@ -1,5 +1,5 @@
 # spring-server-hardware-collector
-Collect the hardware details of machines on lan.
+Collect the hardware details of machines on lan for DSM Synology >= v6
 
 Features
 ----------------------------------
@@ -45,7 +45,7 @@ Tests
 To do 
 ----------------------------------
 - [x] Commit the web-client
-- [ ] Deploy and run server in prod
+- [x] Deploy and run server in prod
 - [ ] Deploy and run agents on computers
 - [ ] Configure agent to start on boot: crontab -e @reboot /path/to/script
 - [ ] Add bash commands for Mac
