@@ -1,5 +1,5 @@
 # spring-server-hardware-collector
-Collect the hardware details of machines on lan for DSM Synology >= v6
+Collect the hardware details of machines on lan for DSM Synology 
 
 Features
 ----------------------------------
@@ -15,7 +15,7 @@ Design
 
 Requirements
 ----------------------------------
-- Java v8, Node.JS 
+- Java v8, Node.JS (compatible with DSM v6)
 - Shell/git skills to run this app
 - Compatible Linux 
 
@@ -23,6 +23,7 @@ Requirements
 Installation
 ----------------------------------
 - Server: git clone ... in /opt 
+
 Connect to synology DSM/Control Panel/Security/Firewall/Create new rule 9390
 - Agent: git clone ... in /opt
 - Web-client: npm install
@@ -40,7 +41,8 @@ open browser at: http://localhost:8088/#/service
 Tests
 ----------------------------------
 - Agent tested on XUbuntu 17.10 on Macbook 2012
-- Webclient requires Node.JS on Synology 5.2-5967 update 6 (Node.JS package is not available)
+- Spring-boot Server tested on Synology 5.2-5967 update 6 
+- Webclient does not work with Synology 5.2-5967 update 6 (Node.JS package is not available)
 
 
 To do 
