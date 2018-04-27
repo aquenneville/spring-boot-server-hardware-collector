@@ -15,27 +15,23 @@ Design
 
 Requirements
 ----------------------------------
-- Java v8, Node.Js
+- Java v8, Node.JS 
 - Shell/git skills to run this app
 - Compatible Linux 
 
 
 Installation
 ----------------------------------
-- Server: tbd
-- Agent: tbd
-- Web-client: tbd
+- Server: git clone ... in /opt
+- Agent: git clone ... in /opt
+- Web-client: npm install
 
 
-Usage
+Run
 ----------------------------------
-- Server: tbd http://...
-- Agent: tbd http://
-- Web-client: 
-
-npm install
-
-npm run dev 
+- Server: java -jar spring-server-hardware-collector-server.jar
+- Agent: java -jar spring-server-hardware-collector-agent.jar --spring.server.hardware.collector.ip=[ip of the server] --spring.server.hardware.collector.port=9390
+- Web-client: npm run dev 
 
 open browser at: http://localhost:8088/#/service
 
@@ -43,6 +39,7 @@ open browser at: http://localhost:8088/#/service
 Tests
 ----------------------------------
 - Agent tested on XUbuntu 17.10 on Macbook 2012
+- Webclient requires Node.JS on Synology 5.2-5967 update 6 (Node.JS package is not available)
 
 
 To do 
