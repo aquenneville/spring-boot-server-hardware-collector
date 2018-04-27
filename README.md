@@ -22,9 +22,7 @@ Requirements
 
 Installation
 ----------------------------------
-- Server: git clone ... in /opt 
-
-Connect to synology DSM/Control Panel/Security/Firewall/Create new rule 9390
+- Server: git clone ... in /opt -> Connect to Synology DSM/Control Panel/Security/Firewall/Create new rule 9390
 - Agent: git clone ... in /opt
 - Web-client: npm install
 
