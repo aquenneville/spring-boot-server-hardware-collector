@@ -30,7 +30,7 @@ Installation
 Run
 ----------------------------------
 - Server: java -jar spring-server-hardware-collector-server.jar
-- Agent: java -jar spring-server-hardware-collector-agent.jar --spring.server.hardware.collector.ip=[ip of the server] --spring.server.hardware.collector.port=9390
+- Agent: java -jar spring-server-hardware-collector-agent.jar --server.hardware.collector.port=9390 --server.hardware.collector.ip=[ip server] 
 - Web-client: npm run dev 
 
 open browser at: http://localhost:8088/#/service
