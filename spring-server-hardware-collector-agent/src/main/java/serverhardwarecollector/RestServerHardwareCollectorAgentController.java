@@ -91,7 +91,7 @@ public class RestServerHardwareCollectorAgentController {
 			data.setCpu("unknown");
 			data.setMemory("unknown");
 			data.setMotherboard("unknown");
-			Disk disk = new Disk();
+			Disk disk = new ServerHardwareData.Disk();
 			disk.setModel("unknown");
 			disk.setSize("unknown");
 			disk.setUsage("unknown");
@@ -107,7 +107,7 @@ public class RestServerHardwareCollectorAgentController {
 			data.setCpu("unknown");
 			data.setMemory("unknown");
 			data.setMotherboard("unknown");
-			Disk disk = new Disk();
+			Disk disk = new ServerHardwareData.Disk();
 			disk.setModel("unknown");
 			disk.setSize("unknown");
 			disk.setUsage("unknown");

@@ -1,7 +1,6 @@
 package serverhardwarecollector.model;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class ServerHardwareData {
 	private String ip;
 	private String osName;	
 	private String macAddress;
-	private static List<Disk> disks;
+	private List<Disk> disks;
 	private LocalDate collectionDate;
 			
 	public ServerHardwareData() {
@@ -71,7 +70,7 @@ public class ServerHardwareData {
 		return disks;
 	}
 	public void setDisks(List<Disk> disks) {
-		ServerHardwareData.disks = disks;
+		this.disks = disks;
 	}
 	public String getOsName() {
 		if (osName == null) {
