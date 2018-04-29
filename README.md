@@ -47,7 +47,8 @@ To do
 ----------------------------------
 - [x] Commit the web-client
 - [x] Deploy and run server in prod
-- [ ] Deploy and run agents on computers
+- [x] Deploy and run agents on computers
+- [ ] Complete run-agent.sh
 - [ ] Configure agent to start on boot: crontab -e @reboot /opt/run-agent.sh
 - [ ] Add bash commands for Mac
 
