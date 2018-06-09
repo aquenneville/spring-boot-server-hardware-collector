@@ -1,3 +1,5 @@
+<img src="https://travis-ci.org/aquenneville/spring-boot-server-hardware-collector.svg?branch=master"/>
+
 # spring-server-hardware-collector
 Collect the hardware details of machines on lan for DSM Synology 
 
