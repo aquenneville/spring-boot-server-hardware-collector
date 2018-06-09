@@ -2,6 +2,8 @@ package serverhardwarecollector;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,14 @@ public class ServerHardwareCollectorCommandConfigurationTests {
 	@Autowired
 	ServerHardwareCommandConfiguration commandConfig;
 
+	@Before
+	public void beforeMethod()
+	{
+	    Assume.assumeFalse(System.getProperty("os.name").toLowerCase().startsWith("win") || 
+	            System.getProperty("os.name").toLowerCase().startsWith("mac"));
+	    // rest of the setup
+	}
+	
 	@Test
 	public void testCpuCommandTest() {
 		assertEquals("lspcu|grep -oP \"(Model name:).*\"|grep -oP \"[^(Model name:)].*\"", commandConfig.getCpu());			
