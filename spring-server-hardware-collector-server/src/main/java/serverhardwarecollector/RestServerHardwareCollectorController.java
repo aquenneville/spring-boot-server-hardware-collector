@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import serverhardwarecollector.exception.IllegalApplicationStateException;
 import serverhardwarecollector.model.ServerHardwareData;
 import serverhardwarecollector.model.ServerHardwareData.Disk;
 import serverhardwarecollector.model.ServerHardwareResponse;
@@ -40,8 +41,6 @@ public class RestServerHardwareCollectorController {
 	
 	@RequestMapping("/add-config")
     public ServerHardwareResponse addConfig(HttpServletResponse httpResponse, @RequestBody @Valid ServerHardwareData request) {
-		//HttpServletRequest httpRequest, Authentication authentication, @RequestBody @Valid CreateApplicationRequest request
-		//@RequestParam(value="name", defaultValue="World") String name
 		lock.lock();
 		ObjectMapper mapper = new ObjectMapper()
 		.registerModule(new Jdk8Module())
@@ -49,24 +48,23 @@ public class RestServerHardwareCollectorController {
 		JavaType type = mapper.getTypeFactory().constructCollectionType(Set.class, ServerHardwareData.class);
 		try {
 			networkConfig = mapper.readValue(new File(Paths.get("hardware-config.json").toString()), type);
+			logger.info("hardware-config.json values have been loaded");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
+			throw new IllegalApplicationStateException("Error: could not read value from the internal file: hardware-config.json. Please check it exists in the current path.");
 		}
 		
 		try {
-			System.out.println("received request: " + request.getHostname() + " cpu:" + request.getCpu());
-			logger.debug("--Application Started--");
-			
 			networkConfig.add(request);
 			
 			// save in json to disk			
 			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 			try {
 				mapper.writeValue(new File(Paths.get("hardware-config.json").toString()), networkConfig);
+				logger.info("config json data has been stored.");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.getMessage());
+				throw new IllegalApplicationStateException("Error: could not write json data to the internal file hardware-config.json in the current path.");
 			}
 		} finally {
 			lock.unlock();
@@ -85,9 +83,10 @@ public class RestServerHardwareCollectorController {
 		JavaType type = mapper.getTypeFactory().constructCollectionType(Set.class, ServerHardwareData.class);
 		try {
 			networkConfig = mapper.readValue(new File(Paths.get("hardware-config.json").toString()), type);
+			logger.info("hardware-config.json values have been loaded");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
+			throw new IllegalApplicationStateException("Error: could not read value from the internal file: hardware-config.json. Please check it exists in the current path.");
 		}
 		
 		return networkConfig;
@@ -121,9 +120,6 @@ public class RestServerHardwareCollectorController {
 		disks.add(disk);
 		data.setDisks(disks);
 		
-		System.out.println("received request: " + data.getHostname() + " cpu:" + data.getCpu());
-		logger.debug("--Application Started--");
-		
 		networkConfig.add(data);
 		ObjectMapper mapper = new ObjectMapper()
 		.registerModule(new Jdk8Module())
@@ -132,9 +128,10 @@ public class RestServerHardwareCollectorController {
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		try {
 			mapper.writeValue(new File(Paths.get("hardware-config.json").toString()), networkConfig);
+			logger.info("config json data has been stored.");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
+			throw new IllegalApplicationStateException("Error: could not write json data to the internal file hardware-config.json in the current path.");
 		}
 		
 		return data;

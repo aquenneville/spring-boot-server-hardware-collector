@@ -13,6 +13,8 @@ import org.apache.commons.exec.ExecuteException;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
 import org.apache.commons.lang3.SystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -29,6 +31,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import serverhardwarecollector.configuration.ServerHardwareCommandConfiguration;
+import serverhardwarecollector.exception.IllegalApplicationStateException;
 import serverhardwarecollector.model.ServerHardwareData;
 import serverhardwarecollector.model.ServerHardwareData.Disk;
 
@@ -38,6 +41,8 @@ import serverhardwarecollector.model.ServerHardwareData.Disk;
 @RequestMapping("/api")
 public class RestServerHardwareCollectorAgentController {
 
+	private static final Logger logger = LoggerFactory.getLogger(RestServerHardwareCollectorAgentController.class);
+	
 	// --server.hardware.collector.port=9390 --server.hardware.collector.ip=1.1.1.1
 	@Value("${server.hardware.collector.ip}")
 	private String serverIp;
@@ -154,7 +159,7 @@ public class RestServerHardwareCollectorAgentController {
 	public String collectExternalProcessData(String command) {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		String line = command;
-		System.out.println("/bin/bash -c '"+command+"'");
+		logger.info("executing: /bin/bash -c '"+command+"'");
 		CommandLine cmdLine = new CommandLine("/bin/bash"); 
 		String[] cmd = {"-c", line }; 
 		cmdLine.addArguments(cmd, false);
@@ -172,22 +177,19 @@ public class RestServerHardwareCollectorAgentController {
 			Thread.sleep(1000);
 			
 		} catch (ExecuteException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Something went wrong EXE during the hardware data collection");
-			e.printStackTrace();
+			logger.error(e.getMessage());
+			throw new IllegalApplicationStateException("Error: hardware collection of the data could not complete.");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-//			System.out.println("Something went wrong IO during the hardware data collection");
-			e.printStackTrace();
+			logger.error(e.getMessage());
+			throw new IllegalApplicationStateException("Error: hardware collection of the data could not complete.");
 		} catch (InterruptedException e) {
-			System.out.println("Hardware data collection interrupted");
-			e.printStackTrace();
+			logger.error(e.getMessage());
+			throw new IllegalApplicationStateException("Error: hardware collection of the data was interrupted.");
 		}
 		return new String(outputStream.toString().replaceAll("\\n", "").trim());
 	}
 
 	public String sendConfigurationData(ServerHardwareData configData) {
-		//ClientHttpRequestFactory requestFactory = getClientHttpRequestFactory();
 		RestTemplate restTemplate = new RestTemplate();
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -201,8 +203,8 @@ public class RestServerHardwareCollectorAgentController {
 		try {
 			httpEntity = new HttpEntity <String> (mapper.writeValueAsString(configData), headers);
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.getMessage());
+			throw new IllegalApplicationStateException("Error: hardware collection of the json data could not process before the transfer.");
 		}
 		System.out.println(serverIp+":"+serverPort);
 		String response = restTemplate.postForObject("http://"+serverIp+":"+serverPort+"/api/add-config", httpEntity, String.class);
